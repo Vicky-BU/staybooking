@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: staybooking
+  servlet:
+    multipart:
+      max-file-size: 10MB # File upload limit, default 1MB not enough.
+  jackson:
+    default-property-inclusion: non_null
+  #连接数据库
+  datasource:
+    url: jdbc:postgresql://${DATABASE_URL:localhost}:${DATABASE_PORT:5433}/postgres
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:secret} #由compose.yaml决定
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  sql:
+    init:
+      mode: always
+      schema-locations: "classpath:postgis_extension.sql" #这次只有create extension if exist,下载的gis已经有extension了，用这句话激活
+      #上一次这里写的create table,创建的schema
+      #这次用Spring jpa，它可以根据你写的饿呢题图结构自动figure out该创建什么样的table
+      #上一次是我们手写create table语句
+
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+
+staybooking:
+  gcs:
+    bucket: vicky-staybooking-bucket-2026wt
+  geocoding:
+    key: AIzaSyDCcEoucr3Wwovi9C9Tjz0w2w9KXxmdcc4
+  jwt:
+    secret-key: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY
+
+

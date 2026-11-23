@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.1.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+
+group = 'com.laioffer'
+version = '0.0.1-SNAPSHOT'
+description = 'staybooking'
+
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    implementation 'com.google.cloud:google-cloud-storage:2.75.0' // Storage for listing pictures,提供可以上传到Google Cloud的功能（是一个库）
+    implementation 'com.google.maps:google-maps-services:2.2.0' // Location lookup, from address to lat/lng，当我们的房东host要创建房源时，会敲地址在哪（string），
+    //这样就要人工去做（去google Maps上敲），但我们的项目是自动化的。调用google api花钱
+    implementation 'io.jsonwebtoken:jjwt-api:0.13.0' // JWT token generation，token-based authentication要用的一个库
+    //java json web token，有它就可以读前端发来的token
+    implementation 'org.hibernate.orm:hibernate-spatial' // Hibernate spatial for location search，jpa hibernate的一个插件，
+    //让通用的jpa支持空间查询
+    implementation 'org.locationtech.jts:jts:1.20.0' // Geometry data type support (e.g. Point, Polygon)，这个库带很多跟地理信息有关的数据结构，
+    //并且这些数据结构跟jdbc兼容，可以直接保存，比较方便？
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA for database access，所有java 的关系型数据库读写底层都是jdbc，
+    //jpa功能更多更复杂，jdbc是jpa的一个子集
+    implementation 'org.springframework.boot:spring-boot-starter-security' // Spring Security for authentication
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc' // Spring Web for REST API，没他，rest请求都发不出去
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0' // JWT
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0' // JWT
+    runtimeOnly 'org.postgresql:postgresql' //PSQL数据库的驱动
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher' //这几个运行单元测验要用的，我们这个项目里没单元测验
+}
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
